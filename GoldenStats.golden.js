@@ -37,6 +37,7 @@ String.prototype.checkNAN = function(ifNaNValue) {
 }
 
 class GetterSetter {
+    listeners = [];
     constructor(defaultValue) {
         this.value = defaultValue;
     };
@@ -47,19 +48,17 @@ class GetterSetter {
 
     set(value) {
         this.value = value;
+
+        this.listeners.forEach(cb => {
+            cb(this.value);
+        })
     }
 
-    listener(cb) {
-        //wait for value to change
-        let lastValue = this.value;
-        let interval = setInterval(()=>{
-            if (lastValue !== this.value) {
-                lastValue = this.value;
-                cb(this.value);
-                clearInterval(interval);
-            }
-        }, 100);
+    registerListener(cb) {
+        this.listeners.push(cb);
     }
+
+    
 }
 
 const rank_to_text = (paidRank, rank, username) => {
@@ -318,7 +317,7 @@ module.exports = class {
 
             // this.chat.info('Getting stats for ' + username);
 
-            get_player_stats(username, this.config.get('api-key')).listener(data=>{
+            get_player_stats(username, this.config.get('api-key')).registerListener(data => {
                 const ranked = api.util.colourify(rank_to_text(data.paidRank, data.rank, username));
                 const star = `[${data.bwStats.star}✫]`;
                 //this.chat.small(JSON.stringify(data));
