@@ -1,0 +1,6 @@
+{
+    "Name": "GoldenStats",
+    "ID": "com.anotherpillow.goldenstats",
+    "Version": "1.0",
+    "Main": "GoldenStats.golden.js::default"
+}
