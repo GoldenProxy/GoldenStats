@@ -148,17 +148,28 @@ const get_player_stats = (player, api_key) => {
 
                         if (data.name.match(/^Antisniperbot(\d+)$/g) || data.name === 'SniperDected') data.channel = 'opal-bot'
 
-                            
+                        const tfinals = "?";
+                        const tbeds = "?";
+                        const twins = "?";
+                        const tkills = "?";
+                        const tdeaths = "?";
+                        const tlosses = "?";
+                        const tfinald = "?";
+                        const tbedslost = "?";
+
                         let bedwars = {}
-                        try {bedwars = hyp.player.stats.Bedwars} catch (_){}
-                        const tfinals = bedwars.final_kills_bedwars || "?";
-                        const tbeds = bedwars.beds_broken_bedwars || "?";
-                        const twins = bedwars.wins_bedwars || "?";
-                        const tkills = bedwars.kills_bedwars || "?";
-                        const tdeaths = bedwars.deaths_bedwars || "?";
-                        const tlosses = bedwars.losses_bedwars || "?";
-                        const tfinald = bedwars.final_deaths_bedwars || "?";
-                        const tbedslost = bedwars.beds_lost_bedwars || "?";
+                        try {
+                            bedwars = hyp.player.stats.Bedwars
+                            tfinals = bedwars.final_kills_bedwars || "?";
+                            tbeds = bedwars.beds_broken_bedwars || "?";
+                            twins = bedwars.wins_bedwars || "?";
+                            tkills = bedwars.kills_bedwars || "?";
+                            tdeaths = bedwars.deaths_bedwars || "?";
+                            tlosses = bedwars.losses_bedwars || "?";
+                            tfinald = bedwars.final_deaths_bedwars || "?";
+                            tbedslost = bedwars.beds_lost_bedwars || "?";
+                        } catch (_){}
+                        
                         
                         if (tfinals + tbeds + twins + tkills + tdeaths + tlosses + tfinald > 0) {
                             data.bwStats = {
