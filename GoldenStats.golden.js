@@ -26,6 +26,16 @@ class Config {
     }
 }
 
+Number.prototype.checkNAN = function(ifNaNValue) {
+    if (isNaN(this)) return ifNaNValue;
+    else return this;
+}
+
+String.prototype.checkNAN = function(ifNaNValue) {
+    if (isNaN(this) || this.toString() === 'NaN') return ifNaNValue;
+    else return this;
+}
+
 class GetterSetter {
     constructor(defaultValue) {
         this.value = defaultValue;
@@ -148,26 +158,26 @@ const get_player_stats = (player, api_key) => {
 
                         if (data.name.match(/^Antisniperbot(\d+)$/g) || data.name === 'SniperDected') data.channel = 'opal-bot'
 
-                        const tfinals = "?";
-                        const tbeds = "?";
-                        const twins = "?";
-                        const tkills = "?";
-                        const tdeaths = "?";
-                        const tlosses = "?";
-                        const tfinald = "?";
-                        const tbedslost = "?";
+                        let tfinals = 0;
+                        let tbeds = 0;
+                        let twins = 0;
+                        let tkills = 0;
+                        let tdeaths = 0;
+                        let tlosses = 0;
+                        let tfinald = 0;
+                        let tbedslost = 0;
 
                         let bedwars = {}
                         try {
                             bedwars = hyp.player.stats.Bedwars
-                            tfinals = bedwars.final_kills_bedwars || "?";
-                            tbeds = bedwars.beds_broken_bedwars || "?";
-                            twins = bedwars.wins_bedwars || "?";
-                            tkills = bedwars.kills_bedwars || "?";
-                            tdeaths = bedwars.deaths_bedwars || "?";
-                            tlosses = bedwars.losses_bedwars || "?";
-                            tfinald = bedwars.final_deaths_bedwars || "?";
-                            tbedslost = bedwars.beds_lost_bedwars || "?";
+                            tfinals = bedwars.final_kills_bedwars;
+                            tbeds = bedwars.beds_broken_bedwars;
+                            twins = bedwars.wins_bedwars;
+                            tkills = bedwars.kills_bedwars;
+                            tdeaths = bedwars.deaths_bedwars;
+                            tlosses = bedwars.losses_bedwars;
+                            tfinald = bedwars.final_deaths_bedwars;
+                            tbedslost = bedwars.beds_lost_bedwars;
                         } catch (_){}
                         
                         
@@ -181,6 +191,17 @@ const get_player_stats = (player, api_key) => {
                                 losses: tlosses,
                                 finalDeaths: tfinald,
                                 bedsLost: tbedslost,
+                            }
+                        } else {
+                            data.bwStats = {
+                                finalKills: "?",
+                                bedsBroken: "?",
+                                wins: "?",
+                                kills: "?",
+                                deaths: "?",
+                                losses: "?",
+                                finalDeaths: "?",
+                                bedsLost: "?",
                             }
                         }
                         try {if (hyp.player.achievements.bedwars_level >= 0) data.bwStats.star = hyp.player.achievements.bedwars_level;}
@@ -301,16 +322,16 @@ module.exports = class {
                 const ranked = api.util.colourify(rank_to_text(data.paidRank, data.rank, username));
                 const star = `[${data.bwStats.star}✫]`;
                 //this.chat.small(JSON.stringify(data));
-                const fkdr = (data.bwStats.finalKills / data.bwStats.finalDeaths).toFixed(2) || 0;
+                const fkdr = (data.bwStats.finalKills / data.bwStats.finalDeaths).toFixed(2).checkNAN(0) || 0;
                 const fkdr_col = genCol(fkdr, 'fkdr');
 
-                const wlr = (data.bwStats.wins / data.bwStats.losses).toFixed(2) || 0;
+                const wlr = (data.bwStats.wins / data.bwStats.losses).toFixed(2).checkNAN(0) || 0;
                 const wlr_col = genCol(wlr, 'wlr');
 
-                const bblr = (data.bwStats.bedsBroken / data.bwStats.bedsLost).toFixed(2) || 0;
+                const bblr = (data.bwStats.bedsBroken / data.bwStats.bedsLost).toFixed(2).checkNAN(0) || 0;
                 const bblr_col = genCol(bblr, 'bblr');
 
-                const kdr = (data.bwStats.kills / data.bwStats.deaths).toFixed(2) || 0;
+                const kdr = (data.bwStats.kills / data.bwStats.deaths).toFixed(2).checkNAN(0) || 0;
                 const kdr_col = genCol(kdr, 'kdr');
                 
 
