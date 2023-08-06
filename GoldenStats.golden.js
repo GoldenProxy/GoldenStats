@@ -1,31 +1,5 @@
 const fs = require('fs');
 
-class Config {
-    path = __dirname + '/goldenstats.config.json';
-
-    constructor() {
-        if (!fs.existsSync(this.path)) 
-            this.save({
-                'api-key': null
-            })
-        
-
-        this.config = JSON.parse(fs.readFileSync(this.path));
-    }
-
-    get(key) {
-        return this.config[key];
-    }
-
-    set(key, value) {
-        this.config[key] = value;
-    }
-
-    save(c=this.config) {
-        fs.writeFileSync(this.path, JSON.stringify(c, null, 4));
-    }
-}
-
 Number.prototype.checkNAN = function(ifNaNValue) {
     if (isNaN(this)) return ifNaNValue;
     else return this;
@@ -297,7 +271,7 @@ module.exports = class {
 
         this.logger.success('GoldenStats loaded!');
 
-        this.config = new Config();
+        this.config = api.config;
 
         this.api.commands.register('/set_api_key', (args, client) => {
             const key = args[0];
